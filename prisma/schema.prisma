@@ -1,0 +1,210 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// USUARIOS
+
+model User {
+  idUser         Int    @id
+  name           String
+  password       String
+  profilePicture String
+
+  Employee Employee[]
+  Gym      Gym[]
+  Like     Like[]
+  Comment  Comment[]
+
+  sentMessages     Message[] @relation("sender")
+  receivedMessages Message[] @relation("receiver")
+}
+
+model EmployeeType {
+  idEmployeeType Int    @id
+  type           String
+
+  Employee Employee[]
+}
+
+model Employee {
+  idEmployee                 Int @id
+  employeeTypeIdEmployeeType Int
+  userIdUser                 Int
+
+  type            EmployeeType      @relation(fields: [employeeTypeIdEmployeeType], references: [idEmployeeType])
+  user            User              @relation(fields: [userIdUser], references: [idUser])
+  GymEmployees    GymEmployee[]
+  WorkoutSchedule WorkoutSchedule[]
+  Diet            Diet[]
+}
+
+model Client {
+  idClient        Int               @id
+  birthdate       DateTime
+  height          Decimal
+  weight          Decimal
+  WorkoutSchedule WorkoutSchedule[]
+  ConsumedFood    ConsumedFood[]
+  Diet            Diet[]
+}
+
+model Plan {
+  idPlan      Int     @id
+  name        String
+  description String
+  price       Decimal
+}
+
+model Location {
+  idLocation Int    @id
+  CEP        String
+  street     String
+  district   String
+  city       String
+  province   String
+
+  Gym Gym[]
+}
+
+model Gym {
+  idGym              Int    @id
+  name               String
+  CNPJ               String
+  locationIdLocation Int
+  userIdUser         Int
+
+  location     Location      @relation(fields: [locationIdLocation], references: [idLocation])
+  user         User          @relation(fields: [userIdUser], references: [idUser])
+  GymEmployees GymEmployee[]
+}
+
+model GymEmployee {
+  idGymEmployees     Int      @id
+  gym                Gym      @relation(fields: [gymIdGym], references: [idGym])
+  employee           Employee @relation(fields: [employeeIdEmployee], references: [idEmployee])
+  gymIdGym           Int
+  employeeIdEmployee Int
+}
+
+// SOCIAL
+
+model Message {
+  idMessage      Int      @id
+  content        String
+  createdAt      DateTime
+  sender         User     @relation("sender", fields: [senderIdUser], references: [idUser])
+  receiver       User     @relation("receiver", fields: [receiverIdUser], references: [idUser])
+  senderIdUser   Int
+  receiverIdUser Int
+}
+
+model Post {
+  idPost   Int       @id
+  content  String
+  mediaUrl String
+  Like     Like[]
+  Comment  Comment[]
+}
+
+model Like {
+  idLike     Int  @id
+  user       User @relation(fields: [userIdUser], references: [idUser])
+  post       Post @relation(fields: [postIdPost], references: [idPost])
+  userIdUser Int
+  postIdPost Int
+}
+
+model Comment {
+  idComment  Int    @id
+  content    String
+  user       User   @relation(fields: [userIdUser], references: [idUser])
+  post       Post   @relation(fields: [postIdPost], references: [idPost])
+  userIdUser Int
+  postIdPost Int
+}
+
+// Treinos
+
+model WorkoutSchedule {
+  idWorkoutSchedule  Int          @id
+  createdAt          DateTime
+  personalManager    Employee     @relation(fields: [employeeIdEmployee], references: [idEmployee])
+  client             Client       @relation(fields: [clientIdClient], references: [idClient])
+  employeeIdEmployee Int
+  clientIdClient     Int
+  WorkoutDay         WorkoutDay[]
+}
+
+model Exercise {
+  idExercise         Int                  @id
+  name               String
+  description        String
+  image              String
+  IndividualExercise IndividualExercise[]
+}
+
+model IndividualExercise {
+  idIndividualExercise   Int        @id
+  exercise               Exercise   @relation(fields: [exerciseIdExercise], references: [idExercise])
+  workout                WorkoutDay @relation(fields: [workoutDayIdWorkoutDay], references: [idWorkoutDay])
+  repetitions            Int
+  exerciseIdExercise     Int
+  workoutDayIdWorkoutDay Int
+}
+
+model WorkoutDay {
+  idWorkoutDay                     Int                  @id
+  schedule                         WorkoutSchedule      @relation(fields: [workoutScheduleIdWorkoutSchedule], references: [idWorkoutSchedule])
+  IndividualExercise               IndividualExercise[]
+  workoutScheduleIdWorkoutSchedule Int
+}
+
+// DIETA
+
+model Food {
+  idFood       Int            @id
+  name         String
+  description  String
+  image        String
+  calories     Int
+  carbo        Int
+  protein      Int
+  transFat     Int
+  saturatedFat Int
+  ConsumedFood ConsumedFood[]
+  DietFood     DietFood[]
+}
+
+model ConsumedFood {
+  idConsumedFood Int    @id
+  client         Client @relation(fields: [clientIdClient], references: [idClient])
+  food           Food   @relation(fields: [foodIdFood], references: [idFood])
+  clientIdClient Int
+  foodIdFood     Int
+}
+
+model DietFood {
+  idDietFood Int  @id
+  diet       Diet @relation(fields: [dietIdDiet], references: [idDiet])
+  food       Food @relation(fields: [foodIdFood], references: [idFood])
+  dietIdDiet Int
+  foodIdFood Int
+}
+
+model Diet {
+  idDiet             Int        @id
+  createdAt          DateTime
+  nutri              Employee   @relation(fields: [employeeIdEmployee], references: [idEmployee])
+  client             Client     @relation(fields: [clientIdClient], references: [idClient])
+  DietFood           DietFood[]
+  employeeIdEmployee Int
+  clientIdClient     Int
+}
