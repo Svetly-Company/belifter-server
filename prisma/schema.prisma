@@ -13,7 +13,7 @@ datasource db {
 // USUARIOS
 
 model User {
-  idUser         Int    @id
+  idUser         Int    @id @default(autoincrement())
   name           String
   password       String
   profilePicture String
@@ -64,18 +64,17 @@ model Plan {
 }
 
 model Location {
-  idLocation Int    @id
+  idLocation Int    @id @default(autoincrement())
   CEP        String
   street     String
   district   String
   city       String
-  province   String
 
   Gym Gym[]
 }
 
 model Gym {
-  idGym              Int    @id
+  idGym              Int    @id @default(autoincrement())
   name               String
   CNPJ               String
   locationIdLocation Int
