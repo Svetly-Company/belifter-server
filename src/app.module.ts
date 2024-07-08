@@ -5,13 +5,16 @@ import { PrismaService } from './database/prisma.service';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
+import { AccountController } from './controllers/account.controller';
+import { AccountModule } from './modules/account.module';
 
 @Module({
   imports: [
-    AuthModule
+    AuthModule,
+    AccountModule
   ],
   controllers: [
-    GymController
+    GymController,
   ],
   providers: [
     {
