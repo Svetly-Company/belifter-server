@@ -1,7 +1,8 @@
 import { Body, Controller, Get, Post } from "@nestjs/common";
-import { CreateGymBody, LocationValidator } from "src/dtos/create-gym-dto";
 import { GymService } from "src/services/gym.service";
-import { BadRequestException } from "@nestjs/common/exceptions";
+import { ZodPipe } from "src/zod/pipe";
+import { CreateGymSchema } from "src/dtos/create-gym-dto";
+import { z } from "zod";
 
 @Controller('gym')
 export class GymController {
@@ -13,15 +14,11 @@ export class GymController {
     }
 
     @Post()
-    async createNewGym(@Body() body : CreateGymBody) {
+    async createNewGym(@Body(new ZodPipe(CreateGymSchema)) body : z.infer<typeof CreateGymSchema>) {
         
         const { cnpj, name, location, password } = body;
 
-        const { success, data: validatedLocation, error } = LocationValidator.safeParse(location);
-
-        if(!success) throw new BadRequestException(error);
-
-        const gym = await this.gymService.createGym({ cnpj, name, password, location: validatedLocation });
+        const gym = await this.gymService.createGym({ cnpj, name, password, location });
 
         return { gym };
     }

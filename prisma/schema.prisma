@@ -12,8 +12,9 @@ datasource db {
 
 // USUARIOS
 
-model User {
-  idUser         Int    @id @default(autoincrement())
+model Account {
+  idAccount      Int    @id @default(autoincrement())
+  email          String @unique
   name           String
   password       String
   profilePicture String
@@ -37,10 +38,10 @@ model EmployeeType {
 model Employee {
   idEmployee                 Int @id
   employeeTypeIdEmployeeType Int
-  userIdUser                 Int
+  accountId                  Int
 
   type            EmployeeType      @relation(fields: [employeeTypeIdEmployeeType], references: [idEmployeeType])
-  user            User              @relation(fields: [userIdUser], references: [idUser])
+  account         Account           @relation(fields: [accountId], references: [idAccount])
   GymEmployees    GymEmployee[]
   WorkoutSchedule WorkoutSchedule[]
   Diet            Diet[]
@@ -54,6 +55,7 @@ model Client {
   WorkoutSchedule WorkoutSchedule[]
   ConsumedFood    ConsumedFood[]
   Diet            Diet[]
+  userIdUser      Int
 }
 
 model Plan {
@@ -78,10 +80,10 @@ model Gym {
   name               String
   CNPJ               String
   locationIdLocation Int
-  userIdUser         Int
+  accountId          Int
 
   location     Location      @relation(fields: [locationIdLocation], references: [idLocation])
-  user         User          @relation(fields: [userIdUser], references: [idUser])
+  account      Account       @relation(fields: [accountId], references: [idAccount])
   GymEmployees GymEmployee[]
 }
 
@@ -96,13 +98,13 @@ model GymEmployee {
 // SOCIAL
 
 model Message {
-  idMessage      Int      @id
-  content        String
-  createdAt      DateTime
-  sender         User     @relation("sender", fields: [senderIdUser], references: [idUser])
-  receiver       User     @relation("receiver", fields: [receiverIdUser], references: [idUser])
-  senderIdUser   Int
-  receiverIdUser Int
+  idMessage         Int      @id
+  content           String
+  createdAt         DateTime
+  sender            Account  @relation("sender", fields: [senderIdAccount], references: [idAccount])
+  receiver          Account  @relation("receiver", fields: [receiverIdAccount], references: [idAccount])
+  senderIdAccount   Int
+  receiverIdAccount Int
 }
 
 model Post {
@@ -114,19 +116,19 @@ model Post {
 }
 
 model Like {
-  idLike     Int  @id
-  user       User @relation(fields: [userIdUser], references: [idUser])
-  post       Post @relation(fields: [postIdPost], references: [idPost])
-  userIdUser Int
+  idLike     Int     @id
+  account    Account @relation(fields: [idAccount], references: [idAccount])
+  post       Post    @relation(fields: [postIdPost], references: [idPost])
+  idAccount  Int
   postIdPost Int
 }
 
 model Comment {
-  idComment  Int    @id
+  idComment  Int     @id
   content    String
-  user       User   @relation(fields: [userIdUser], references: [idUser])
-  post       Post   @relation(fields: [postIdPost], references: [idPost])
-  userIdUser Int
+  account    Account @relation(fields: [idAccount], references: [idAccount])
+  post       Post    @relation(fields: [postIdPost], references: [idPost])
+  idAccount  Int
   postIdPost Int
 }
 

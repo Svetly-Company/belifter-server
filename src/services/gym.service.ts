@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { createHash } from "crypto";
+import { createAccountObject } from "src/database/helper";
 import { PrismaService } from "src/database/prisma.service";
-import { CreateGymBody } from "src/dtos/create-gym-dto";
+import { CreateGymSchema } from "src/dtos/create-gym-dto";
+import { z } from "zod";
 
 @Injectable()
 export class GymService {
@@ -13,12 +14,7 @@ export class GymService {
         return gyms;
     }
 
-    async createGym(gymInfo : CreateGymBody) {
-
-        const { password } = gymInfo;
-
-        const hashPassword = createHash('sha256').update(password).digest('base64');
-
+    async createGym(gymInfo : z.infer<typeof CreateGymSchema>) {
         return this.database.gym.create({
             data: {
                 CNPJ: gymInfo.cnpj,
@@ -31,12 +27,8 @@ export class GymService {
                         street: gymInfo.location.street
                     }
                 },
-                user: {
-                    create: {
-                        name: gymInfo.name,
-                        password: hashPassword,
-                        profilePicture: "none"
-                    }
+                account: {
+                    create: createAccountObject({ name: gymInfo.name, password: gymInfo.password, email: gymInfo.email })
                 }
             }
         });
