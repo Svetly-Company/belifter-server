@@ -10,7 +10,7 @@ import { PrismaService } from "src/database/prisma.service";
     imports: [
         JwtModule.register({
             global: true,
-            secret: "abc",
+            secret: process.env.JWT_SECRET,
             signOptions: { expiresIn: "2d" }
         }),
         AccountModule
