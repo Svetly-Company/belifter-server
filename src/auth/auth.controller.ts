@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Request } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, Post, Request } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { Public } from "./public-key";
 import { AuthDto } from "../dtos/auth-dto"
@@ -10,8 +10,10 @@ export class AuthController {
 
     @Public()
     @Post('signin')
-    async signInRoute(@Body() auth: z.infer<typeof AuthDto>) {
-        return await this.authService.signIn(auth.email, auth.password);
+    async signInRoute(@Body() body: z.infer<typeof AuthDto>) {
+        const { success, data, error } = AuthDto.safeParse(body);
+        if(!success) throw new BadRequestException(error);
+        return await this.authService.signIn(data.email, data.password);
     }
 
     @Get("profile")
