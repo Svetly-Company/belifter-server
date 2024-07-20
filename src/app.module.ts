@@ -7,6 +7,8 @@ import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { AccountController } from './controllers/account.controller';
 import { AccountModule } from './modules/account.module';
+import { AuthService } from './auth/auth.service';
+import { AccountService } from './services/account.service';
 
 @Module({
   imports: [
@@ -22,7 +24,9 @@ import { AccountModule } from './modules/account.module';
       useClass: AuthGuard
     },
     GymService, 
-    PrismaService
+    PrismaService,
+    AuthService,
+    AccountService
   ],
 })
 export class AppModule {}

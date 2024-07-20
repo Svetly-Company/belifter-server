@@ -77,8 +77,8 @@ model Location {
 
 model Gym {
   idGym              Int    @id @default(autoincrement())
+  CNPJ               String @unique
   name               String
-  CNPJ               String
   locationIdLocation Int
   accountId          Int
 
