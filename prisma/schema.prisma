@@ -26,6 +26,7 @@ model Account {
 
   sentMessages     Message[] @relation("sender")
   receivedMessages Message[] @relation("receiver")
+  Post             Post[]
 }
 
 model EmployeeType {
@@ -108,11 +109,13 @@ model Message {
 }
 
 model Post {
-  idPost   Int       @id
-  content  String
-  mediaUrl String
-  Like     Like[]
-  Comment  Comment[]
+  idPost           Int       @id @default(autoincrement())
+  account          Account   @relation(fields: [accountIdAccount], references: [idAccount])
+  content          String
+  mediaUrl         String
+  Like             Like[]
+  Comment          Comment[]
+  accountIdAccount Int
 }
 
 model Like {

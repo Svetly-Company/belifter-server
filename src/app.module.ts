@@ -9,6 +9,8 @@ import { AccountController } from './controllers/account.controller';
 import { AccountModule } from './modules/account.module';
 import { AuthService } from './auth/auth.service';
 import { AccountService } from './services/account.service';
+import { PostsService } from './services/posts.service';
+import { PostsController } from './controllers/posts.controller';
 
 @Module({
   imports: [
@@ -17,6 +19,7 @@ import { AccountService } from './services/account.service';
   ],
   controllers: [
     GymController,
+    PostsController
   ],
   providers: [
     {
@@ -26,7 +29,8 @@ import { AccountService } from './services/account.service';
     GymService, 
     PrismaService,
     AuthService,
-    AccountService
+    AccountService,
+    PostsService
   ],
 })
 export class AppModule {}

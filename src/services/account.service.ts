@@ -24,7 +24,7 @@ export class AccountService {
                     profilePicture: ""
                 }
             })
-            return { id: u.idAccount, name: u.name, email: u.email, profilePicture: u.profilePicture } || null;
+            return { id: u.idAccount, name: u.name, email: u.email, profilePicture: u.profilePicture };
         }catch(e) {
             throw new BadRequestException(e.meta);
         }
