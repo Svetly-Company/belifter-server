@@ -30,14 +30,14 @@ model Account {
 }
 
 model EmployeeType {
-  idEmployeeType Int    @id
+  idEmployeeType Int    @id @default(autoincrement())
   type           String
 
   Employee Employee[]
 }
 
 model Employee {
-  idEmployee                 Int @id
+  idEmployee                 Int @id @default(autoincrement())
   employeeTypeIdEmployeeType Int
   accountId                  Int
 
@@ -60,7 +60,7 @@ model Client {
 }
 
 model Plan {
-  idPlan      Int     @id
+  idPlan      Int     @id @default(autoincrement())
   name        String
   description String
   price       Decimal
@@ -89,7 +89,7 @@ model Gym {
 }
 
 model GymEmployee {
-  idGymEmployees     Int      @id
+  idGymEmployees     Int      @id @default(autoincrement())
   gym                Gym      @relation(fields: [gymIdGym], references: [idGym])
   employee           Employee @relation(fields: [employeeIdEmployee], references: [idEmployee])
   gymIdGym           Int
@@ -99,7 +99,7 @@ model GymEmployee {
 // SOCIAL
 
 model Message {
-  idMessage         Int      @id
+  idMessage         Int      @id @default(autoincrement())
   content           String
   createdAt         DateTime
   sender            Account  @relation("sender", fields: [senderIdAccount], references: [idAccount])
@@ -138,7 +138,7 @@ model Comment {
 // Treinos
 
 model WorkoutSchedule {
-  idWorkoutSchedule  Int          @id
+  idWorkoutSchedule  Int          @id @default(autoincrement())
   createdAt          DateTime
   personalManager    Employee     @relation(fields: [employeeIdEmployee], references: [idEmployee])
   client             Client       @relation(fields: [clientIdClient], references: [idClient])
@@ -148,7 +148,7 @@ model WorkoutSchedule {
 }
 
 model Exercise {
-  idExercise         Int                  @id
+  idExercise         Int                  @id @default(autoincrement())
   name               String
   description        String
   image              String
@@ -156,7 +156,7 @@ model Exercise {
 }
 
 model IndividualExercise {
-  idIndividualExercise   Int        @id
+  idIndividualExercise   Int        @id @default(autoincrement())
   exercise               Exercise   @relation(fields: [exerciseIdExercise], references: [idExercise])
   workout                WorkoutDay @relation(fields: [workoutDayIdWorkoutDay], references: [idWorkoutDay])
   repetitions            Int
@@ -165,7 +165,7 @@ model IndividualExercise {
 }
 
 model WorkoutDay {
-  idWorkoutDay                     Int                  @id
+  idWorkoutDay                     Int                  @id @default(autoincrement())
   schedule                         WorkoutSchedule      @relation(fields: [workoutScheduleIdWorkoutSchedule], references: [idWorkoutSchedule])
   IndividualExercise               IndividualExercise[]
   workoutScheduleIdWorkoutSchedule Int
@@ -174,10 +174,11 @@ model WorkoutDay {
 // DIETA
 
 model Food {
-  idFood       Int            @id
+  idFood       Int            @id @default(autoincrement())
   name         String
   description  String
   image        String
+  type Int
   calories     Int
   carbo        Int
   protein      Int
@@ -188,7 +189,7 @@ model Food {
 }
 
 model ConsumedFood {
-  idConsumedFood Int    @id
+  idConsumedFood Int    @id @default(autoincrement())
   client         Client @relation(fields: [clientIdClient], references: [idClient])
   food           Food   @relation(fields: [foodIdFood], references: [idFood])
   clientIdClient Int
@@ -196,7 +197,7 @@ model ConsumedFood {
 }
 
 model DietFood {
-  idDietFood Int  @id
+  idDietFood Int  @id @default(autoincrement())
   diet       Diet @relation(fields: [dietIdDiet], references: [idDiet])
   food       Food @relation(fields: [foodIdFood], references: [idFood])
   dietIdDiet Int
@@ -204,7 +205,7 @@ model DietFood {
 }
 
 model Diet {
-  idDiet             Int        @id
+  idDiet             Int        @id @default(autoincrement())
   createdAt          DateTime
   nutri              Employee   @relation(fields: [employeeIdEmployee], references: [idEmployee])
   client             Client     @relation(fields: [clientIdClient], references: [idClient])

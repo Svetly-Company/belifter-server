@@ -11,6 +11,8 @@ import { AuthService } from './auth/auth.service';
 import { AccountService } from './services/account.service';
 import { PostsService } from './services/posts.service';
 import { PostsController } from './controllers/posts.controller';
+import { ChatController } from './controllers/chat.controller';
+import { ChatService } from './services/chat.service';
 
 @Module({
   imports: [
@@ -19,7 +21,8 @@ import { PostsController } from './controllers/posts.controller';
   ],
   controllers: [
     GymController,
-    PostsController
+    PostsController,
+    ChatController
   ],
   providers: [
     {
@@ -30,7 +33,8 @@ import { PostsController } from './controllers/posts.controller';
     PrismaService,
     AuthService,
     AccountService,
-    PostsService
+    PostsService,
+    ChatService
   ],
 })
 export class AppModule {}
