@@ -13,6 +13,8 @@ import { PostsService } from './services/posts.service';
 import { PostsController } from './controllers/posts.controller';
 import { ChatController } from './controllers/chat.controller';
 import { ChatService } from './services/chat.service';
+import { ProfileService } from './services/profile.service';
+import { ProfileController } from './controllers/profile.controller';
 
 @Module({
   imports: [
@@ -22,7 +24,8 @@ import { ChatService } from './services/chat.service';
   controllers: [
     GymController,
     PostsController,
-    ChatController
+    ChatController,
+    ProfileController
   ],
   providers: [
     {
@@ -34,7 +37,8 @@ import { ChatService } from './services/chat.service';
     AuthService,
     AccountService,
     PostsService,
-    ChatService
+    ChatService,
+    ProfileService
   ],
 })
 export class AppModule {}
