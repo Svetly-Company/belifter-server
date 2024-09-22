@@ -10,15 +10,9 @@ export class GymService {
 
     constructor(private readonly database: PrismaService, private readonly uploadService: UploadService) {}
 
-    async getGyms() {
-        let gyms = await this.database.gym.findMany();
-        let updateGyms = [];
-        for(let i = 0; i < gyms.length; i++) {
-            let g = gyms[i];
-            const mediaUrl = await this.uploadService.getImageUrl(g.profilePicture);
-            updateGyms.push({ profilePicture: mediaUrl, ...g })
-        }
-        return updateGyms;
+    getGyms() {
+        let gyms = this.database.gym.findMany();
+        return gyms;
     }
 
     async createGym(gymInfo : z.infer<typeof CreateGymSchema>) {
