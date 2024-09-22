@@ -79,6 +79,7 @@ model Location {
 model Gym {
   idGym              Int    @id @default(autoincrement())
   CNPJ               String @unique
+  profilePicture String @default("")
   name               String
   locationIdLocation Int
   accountId          Int

@@ -2,6 +2,7 @@ import { BadRequestException, Body, Controller, Get, Param, Post, Request } from
 import { CommentPostSchema, LikePostSchema } from "src/dtos/comment-post-dto";
 import { CreatePostSchema } from "src/dtos/create-post-dto";
 import { PostsService } from "src/services/posts.service";
+import { UploadService } from "src/services/upload.service";
 
 @Controller('posts')
 export class PostsController {

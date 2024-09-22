@@ -1,9 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/database/prisma.service";
+import { UploadService } from "./upload.service";
 
 @Injectable() 
 export class ChatService {
-    constructor(private prisma: PrismaService) {}
+    constructor(private prisma: PrismaService, private uploadService: UploadService) {}
 
     async getChats(id : number) {
         const users = await this.prisma.account.findMany({ where: { NOT: { idAccount: id } } });
@@ -15,9 +16,11 @@ export class ChatService {
                 (m.receiverIdAccount == id && m.senderIdAccount == user.idAccount) 
                 || (m.receiverIdAccount == user.idAccount && m.senderIdAccount == id)
             ).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0] || {content: "", createdAt: ""};
+            const mediaLink = await this.uploadService.getImageUrl(user.profilePicture);
             lastMessagesList.push({
                 id: user.idAccount,
                 name: user.name,
+                mediaUrl: mediaLink,
                 lastMessageContent: lastMessage.content,
                 lastMessageDate: lastMessage.createdAt
             })
@@ -44,6 +47,15 @@ export class ChatService {
                 {receiverIdAccount: user2Id, senderIdAccount: user1Id,}
             ]
         }, include: { receiver: { select: { name: true, profilePicture: true, idAccount: true } }, sender: { select: { name: true, profilePicture: true, idAccount: true } } } })
-        return history;
+        return history.map(async (u) => {
+            if(u.receiver.idAccount == user2Id) {
+                const mediaLink = await this.uploadService.getImageUrl(u.receiver.profilePicture);
+                return { receiver: { ...u.receiver, profilePicture: mediaLink }, ...u }
+            }else if(u.sender.idAccount == user2Id) {
+                const mediaLink = await this.uploadService.getImageUrl(u.sender.profilePicture);
+                return { sender: { ...u.sender, profilePicture: mediaLink }, ...u }
+            }
+            return u;
+        });
     }   
 }  

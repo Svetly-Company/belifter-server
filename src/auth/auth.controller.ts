@@ -3,10 +3,12 @@ import { AuthService } from "./auth.service";
 import { Public } from "./public-key";
 import { AuthDto } from "../dtos/auth-dto"
 import z from "zod";
+import { AccountService } from "src/services/account.service";
+import { UploadService } from "src/services/upload.service";
 
 @Controller('auth') 
 export class AuthController {
-    constructor(private authService: AuthService) {}
+    constructor(private authService: AuthService, private user : AccountService, private uploadService: UploadService) {}
 
     @Public()
     @Post('signin')
@@ -18,6 +20,8 @@ export class AuthController {
 
     @Get("profile")
     async getProfileRoute(@Request() req) {
-        return req.user;
+        const account = await this.user.findAccountById(req.user.id)
+        const mediaUrl = await this.uploadService.getImageUrl(account.profilePicture)
+        return { id: account.idAccount, email: account.email, name: account.name, profilePicture: mediaUrl};
     }
 }

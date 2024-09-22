@@ -12,6 +12,12 @@ export class AccountService {
         })
         return u || null;
     }
+    async findAccountById(id : number) {
+        const u = await this.prisma.account.findUnique({
+            where: { idAccount: id }
+        })
+        return u || null;
+    }
 
     async createNewAccount(email : string, password : string, name : string) {
         const HashPass = hashPassword(password);

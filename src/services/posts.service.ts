@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/database/prisma.service";
+import { UploadService } from "./upload.service";
 
 interface ICreatePost {
     content?: string;
@@ -22,7 +23,7 @@ interface ILikeOnPost {
 
 @Injectable()
 export class PostsService {
-    constructor(private database : PrismaService) {}
+    constructor(private database : PrismaService, private upload: UploadService) {}
 
     async getAllPosts() {
         const posts = await this.database.post.findMany({
@@ -37,23 +38,26 @@ export class PostsService {
                 Like: true
             }
         });
-        return posts.map(post => ({ 
-            idPost: post.idPost, 
-            content: post.content, 
-            media: post.mediaUrl, 
-            likes: post.Like.length, 
-            author: {
-                id: post.account.idAccount,
-                name: post.account.name,
-                profilePicture: post.account.profilePicture
-            },
-            comments: post.Comment.map(comment => ({
-                content: comment.content, 
-                authorName: comment.account.name,
-                authorId: comment.account.idAccount,
-                profilePicture: comment.account.profilePicture 
-            })) 
-        }));
+        return posts.map(async (post) => {
+            const media = await this.upload.getImageUrl(post.mediaUrl);
+            return { 
+                idPost: post.idPost, 
+                content: post.content, 
+                media: media, 
+                likes: post.Like.length, 
+                author: {
+                    id: post.account.idAccount,
+                    name: post.account.name,
+                    profilePicture: post.account.profilePicture
+                },
+                comments: post.Comment.map(comment => ({
+                    content: comment.content, 
+                    authorName: comment.account.name,
+                    authorId: comment.account.idAccount,
+                    profilePicture: comment.account.profilePicture 
+                })) 
+            }
+        });
     }
 
     async createPost({ content, mediaUrl, authorId } : ICreatePost) {
