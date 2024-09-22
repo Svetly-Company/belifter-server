@@ -7,8 +7,8 @@ import { randomText } from "src/utils";
 @Injectable()
 export class UploadService {
     private readonly s3Client = new S3Client({ region: this.configService.get("AWS_S3_REGION"), credentials: {
-        accessKeyId: "AKIA6JKEYGIC4MFK2BQL",
-        secretAccessKey: "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"
+        accessKeyId: this.configService.get("AWS_S3_ACCESS_KEY"),
+        secretAccessKey: this.configService.get("AWS_S3_SECRET_KEY")
     } });
 
     constructor(private readonly configService: ConfigService) {}
