@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/database/prisma.service";
+import { UploadService } from "./upload.service";
 
 interface ICreatePost {
     content?: string;
@@ -22,7 +23,7 @@ interface ILikeOnPost {
 
 @Injectable()
 export class ProfileService {
-    constructor(private database : PrismaService) {}
+    constructor(private database : PrismaService, private uploadService : UploadService) {}
 
     async getUserInfoById(id : number) {
         const user = await this.database.account.findFirst({ where: { idAccount: id }, include: { Post: true } });
@@ -34,7 +35,10 @@ export class ProfileService {
                 steps: 0,
                 distance: 0
             },
-            posts: user.Post.map(p => ({ id: p.idPost, content: p.content, mediaUrl: p.mediaUrl }))
+            posts: user.Post.map(async (p) => {
+                const media = await this.uploadService.getImageUrl(p.mediaUrl)
+                return { id: p.idPost, content: p.content, mediaUrl: media }
+            })
         }
     }
 }

@@ -3,15 +3,20 @@ import { createAccountObject } from "src/database/helper";
 import { PrismaService } from "src/database/prisma.service";
 import { CreateGymSchema } from "src/dtos/create-gym-dto";
 import { z } from "zod";
+import { UploadService } from "./upload.service";
 
 @Injectable()
 export class GymService {
 
-    constructor(private readonly database: PrismaService) {}
+    constructor(private readonly database: PrismaService, private readonly uploadService: UploadService) {}
 
-    getGyms() {
-        let gyms = this.database.gym.findMany();
-        return gyms;
+    async getGyms() {
+        let gyms = await this.database.gym.findMany();
+        
+        return gyms.map(async (g) => {
+            const mediaUrl = await this.uploadService.getImageUrl(g.profilePicture);
+            return { profilePicture: mediaUrl, ...g }
+        });
     }
 
     async createGym(gymInfo : z.infer<typeof CreateGymSchema>) {
@@ -20,6 +25,7 @@ export class GymService {
                 data: {
                     CNPJ: gymInfo.cnpj,
                     name: gymInfo.name,
+                    profilePicture: gymInfo.mediaUrl,
                     location: {
                         create: {
                             CEP: gymInfo.location.cep,
@@ -29,7 +35,7 @@ export class GymService {
                         }
                     },
                     account: {
-                        create: createAccountObject({ name: gymInfo.name, password: gymInfo.password, email: gymInfo.email })
+                        create: createAccountObject({ name: gymInfo.name, password: gymInfo.password, email: gymInfo.email, mediaUrl: gymInfo.mediaUrl })
                     }
                 }
             });

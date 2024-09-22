@@ -5,6 +5,7 @@ import { AuthService } from "./auth.service";
 import { AccountModule } from "src/modules/account.module";
 import { AccountService } from "src/services/account.service";
 import { PrismaService } from "src/database/prisma.service";
+import { UploadService } from "src/services/upload.service";
 
 @Module({
     imports: [
@@ -21,7 +22,8 @@ import { PrismaService } from "src/database/prisma.service";
     providers: [
         AuthService,
         AccountService,
-        PrismaService
+        PrismaService,
+        UploadService
     ]
 })
 export class AuthModule {}

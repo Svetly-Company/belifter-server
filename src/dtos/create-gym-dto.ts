@@ -10,6 +10,7 @@ const LocationSchema = z.object({
 export const CreateGymSchema = z.object({
     name: z.string(),
     email: z.string().email(),
+    mediaUrl: z.string(),
     password: z.string(),
     cnpj: z.string().length(14),
     location: LocationSchema,
