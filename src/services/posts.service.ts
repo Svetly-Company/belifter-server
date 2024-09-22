@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/database/prisma.service";
 import { UploadService } from "./upload.service";
-import { UploadService } from "./upload.service";
 
 interface ICreatePost {
     content?: string;
@@ -24,7 +23,6 @@ interface ILikeOnPost {
 
 @Injectable()
 export class PostsService {
-    constructor(private database : PrismaService, private upload: UploadService) {}
     constructor(private database : PrismaService, private upload: UploadService) {}
 
     async getAllPosts() {
