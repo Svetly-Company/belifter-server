@@ -12,11 +12,13 @@ export class GymService {
 
     async getGyms() {
         let gyms = await this.database.gym.findMany();
-        
-        return gyms.map(async (g) => {
+        let updateGyms = [];
+        for(let i = 0; i < gyms.length; i++) {
+            let g = gyms[i];
             const mediaUrl = await this.uploadService.getImageUrl(g.profilePicture);
-            return { profilePicture: mediaUrl, ...g }
-        });
+            updateGyms.push({ profilePicture: mediaUrl, ...g })
+        }
+        return updateGyms;
     }
 
     async createGym(gymInfo : z.infer<typeof CreateGymSchema>) {

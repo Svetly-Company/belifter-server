@@ -27,6 +27,12 @@ export class ProfileService {
 
     async getUserInfoById(id : number) {
         const user = await this.database.account.findFirst({ where: { idAccount: id }, include: { Post: true } });
+        const updatePosts = [];
+        for(let i = 0; i < user.Post.length; i++) {
+            const p = user.Post[i];
+            const media = await this.uploadService.getImageUrl(p.mediaUrl)
+            updatePosts.push({ id: p.idPost, content: p.content, mediaUrl: media })
+        }
         return {
             username: user.name,
             description: "em briga de cego todo chute é voadora",
@@ -35,10 +41,7 @@ export class ProfileService {
                 steps: 0,
                 distance: 0
             },
-            posts: user.Post.map(async (p) => {
-                const media = await this.uploadService.getImageUrl(p.mediaUrl)
-                return { id: p.idPost, content: p.content, mediaUrl: media }
-            })
+            posts: updatePosts
         }
     }
 }

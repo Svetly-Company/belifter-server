@@ -38,9 +38,11 @@ export class PostsService {
                 Like: true
             }
         });
-        return posts.map(async (post) => {
+        const updatePosts = [];
+        for(let i = 0; i < posts.length; i++) {
+            const post = posts[i];
             const media = await this.upload.getImageUrl(post.mediaUrl);
-            return { 
+            updatePosts.push({ 
                 idPost: post.idPost, 
                 content: post.content, 
                 media: media, 
@@ -56,8 +58,9 @@ export class PostsService {
                     authorId: comment.account.idAccount,
                     profilePicture: comment.account.profilePicture 
                 })) 
-            }
-        });
+            })
+        }
+        return updatePosts; 
     }
 
     async createPost({ content, mediaUrl, authorId } : ICreatePost) {
