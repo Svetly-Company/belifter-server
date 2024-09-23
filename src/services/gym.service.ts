@@ -16,7 +16,7 @@ export class GymService {
         for(let i = 0; i < gyms.length; i++) {
             const gym = gyms[i];
             let imageUrl = await this.uploadService.getImageUrl(gym.profilePicture);
-            updatedGyms.push({profilePicture: imageUrl, ...gym });
+            updatedGyms.push({...gym, profilePicture: imageUrl });
         }
         return updatedGyms;
     }
