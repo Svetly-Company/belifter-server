@@ -11,7 +11,7 @@ export class GymService {
     constructor(private readonly database: PrismaService, private readonly uploadService: UploadService) {}
 
     async getGyms() {
-        let gyms = this.database.gym.findMany();
+        let gyms = await this.database.gym.findMany();
         let updatedGyms = [];
         for(let i = 0; i < gyms.length; i++) {
             const gym = gyms[i];
