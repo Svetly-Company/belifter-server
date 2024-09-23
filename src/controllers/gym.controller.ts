@@ -11,6 +11,7 @@ export class GymController {
     constructor(private readonly gymService: GymService, private readonly authService: AuthService) {}
 
     @Get()
+    @Public()
     getAllGyms() {
         return this.gymService.getGyms();
     }
