@@ -11,12 +11,18 @@ export class GymService {
     constructor(private readonly database: PrismaService, private readonly uploadService: UploadService) {}
 
     async getGyms() {
-        let gyms = await this.database.gym.findMany();
+        let gyms = await this.database.gym.findMany({ include: { location: true } });
         let updatedGyms = [];
         for(let i = 0; i < gyms.length; i++) {
             const gym = gyms[i];
             let imageUrl = await this.uploadService.getImageUrl(gym.profilePicture);
-            updatedGyms.push({...gym, profilePicture: imageUrl });
+            updatedGyms.push({
+                id: gym.accountId,
+                name: gym.name,
+                cnpj: gym.CNPJ,
+                location: gym.location,
+                profilePicture: imageUrl 
+            });
         }
         return updatedGyms;
     }
