@@ -12,8 +12,9 @@ export class GymController {
 
     @Get()
     @Public()
-    getAllGyms() {
-        return this.gymService.getGyms();
+    async getAllGyms() {
+        const gyms = await this.gymService.getGyms();
+        return gyms;
     }
 
     @Public()
