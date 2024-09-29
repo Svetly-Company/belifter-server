@@ -17,6 +17,8 @@ import { ProfileController } from './controllers/profile.controller';
 import { ConfigModule } from '@nestjs/config';
 import { UploadService } from './services/upload.service';
 import { UploadController } from './controllers/upload.controller';
+import { ExerciseController } from './controllers/exercise.controller';
+import { ExerciseService } from './services/exercise.service';
 
 @Module({
   imports: [
@@ -29,7 +31,8 @@ import { UploadController } from './controllers/upload.controller';
     PostsController,
     ChatController,
     ProfileController,
-    UploadController
+    UploadController,
+    ExerciseController
   ],
   providers: [
     {
@@ -43,7 +46,8 @@ import { UploadController } from './controllers/upload.controller';
     PostsService,
     ChatService,
     ProfileService,
-    UploadService
+    UploadService,
+    ExerciseService
   ],
 })
 export class AppModule {}

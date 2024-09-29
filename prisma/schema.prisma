@@ -57,13 +57,15 @@ model Client {
   ConsumedFood    ConsumedFood[]
   Diet            Diet[]
   userIdUser      Int
+  Plan            Plan[]
 }
 
 model Plan {
-  idPlan      Int     @id @default(autoincrement())
-  name        String
-  description String
-  price       Decimal
+  idPlan         Int    @id @default(autoincrement())
+  client         Client @relation(fields: [clientIdClient], references: [idClient])
+  gym            Gym    @relation(fields: [gymIdGym], references: [idGym])
+  clientIdClient Int
+  gymIdGym       Int
 }
 
 model Location {
@@ -79,7 +81,7 @@ model Location {
 model Gym {
   idGym              Int    @id @default(autoincrement())
   CNPJ               String @unique
-  profilePicture String @default("")
+  profilePicture     String @default("")
   name               String
   locationIdLocation Int
   accountId          Int
@@ -87,6 +89,7 @@ model Gym {
   location     Location      @relation(fields: [locationIdLocation], references: [idLocation])
   account      Account       @relation(fields: [accountId], references: [idAccount])
   GymEmployees GymEmployee[]
+  Plan         Plan[]
 }
 
 model GymEmployee {
@@ -148,12 +151,22 @@ model WorkoutSchedule {
   WorkoutDay         WorkoutDay[]
 }
 
+model Workout {
+  idWorkout   Int        @id @default(autoincrement())
+  name        String
+  description String
+  image       String
+  exercises   Exercise[]
+}
+
 model Exercise {
   idExercise         Int                  @id @default(autoincrement())
   name               String
   description        String
   image              String
   IndividualExercise IndividualExercise[]
+  Workout            Workout?             @relation(fields: [workoutIdWorkout], references: [idWorkout])
+  workoutIdWorkout   Int?
 }
 
 model IndividualExercise {
@@ -179,7 +192,7 @@ model Food {
   name         String
   description  String
   image        String
-  type Int
+  type         Int
   calories     Int
   carbo        Int
   protein      Int
