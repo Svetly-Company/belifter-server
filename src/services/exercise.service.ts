@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/database/prisma.service";
 import { UploadService } from "./upload.service";
@@ -35,8 +36,8 @@ export class ExerciseService {
         const updatedWorkouts = [];
         for(let i = 0; i < workouts.length; i++) {
             const workout = workouts[i];
-            let image = await this.uploadService.getImageUrl(workout.image);
-            let newExercises = [];
+            const image = await this.uploadService.getImageUrl(workout.image);
+            const newExercises = [];
             for(let j = 0; j < workout.exercises.length; j++) {
                 const exercise = workout.exercises[j];
                 const image2 = await this.uploadService.getImageUrl(exercise.image);
@@ -45,6 +46,15 @@ export class ExerciseService {
             updatedWorkouts.push({...workout, image: image, exercises: newExercises});
         }
         return updatedWorkouts;
+    }
+
+    async getWorkoutStats(id: number) {
+        return {
+            carbo: Math.trunc((22 * (id**2) / id)),
+            gordu: Math.trunc((14 * (id**2) / id)),
+            protein: Math.trunc((13 * (id**2) / id)),
+            calories: Math.trunc((181 * (id**2) / id)),
+        }
     }
 
     async createWorkout(create : iCreateWorkout) {

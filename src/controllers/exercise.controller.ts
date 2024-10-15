@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { BadRequestException, Body, Controller, Get, Param, Post, Req } from "@nestjs/common";
 import { ChatService } from "src/services/chat.service";
 import { ExerciseService } from "src/services/exercise.service";
@@ -15,6 +17,13 @@ export class ExerciseController {
     @Get()
     async getExercises(@Req() req) {
         const workouts = await this.exerciseService.getWorkouts();
+        return workouts;
+    }
+
+    @Get('stats')
+    async getWorkoutStats(@Req() req) {
+        const id = req.user.id;
+        const workouts = await this.exerciseService.getWorkoutStats(id);
         return workouts;
     }
 
