@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { GymController } from './controllers/gym.controller';
 import { GymService } from './services/gym.service';
@@ -19,6 +20,8 @@ import { UploadService } from './services/upload.service';
 import { UploadController } from './controllers/upload.controller';
 import { ExerciseController } from './controllers/exercise.controller';
 import { ExerciseService } from './services/exercise.service';
+import { LifterService } from './services/lifters.service';
+import { LifterController } from './controllers/lifters.controller';
 
 @Module({
   imports: [
@@ -32,7 +35,8 @@ import { ExerciseService } from './services/exercise.service';
     ChatController,
     ProfileController,
     UploadController,
-    ExerciseController
+    ExerciseController,
+    LifterController
   ],
   providers: [
     {
@@ -47,7 +51,8 @@ import { ExerciseService } from './services/exercise.service';
     ChatService,
     ProfileService,
     UploadService,
-    ExerciseService
+    ExerciseService,
+    LifterService
   ],
 })
 export class AppModule {}
