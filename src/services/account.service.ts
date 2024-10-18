@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { hashPassword } from "src/database/helper";
 import { PrismaService } from "src/database/prisma.service";
@@ -34,5 +35,10 @@ export class AccountService {
         }catch(e) {
             throw new BadRequestException(e.meta);
         }
+    }
+
+    async getUser(id : string) {
+        const user = await this.prisma.account.findFirst({ where: { idAccount: Number(id) } });
+        return user;
     }
 }  
