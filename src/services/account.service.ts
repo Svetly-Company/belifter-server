@@ -20,7 +20,7 @@ export class AccountService {
         return u || null;
     }
 
-    async createNewAccount(email : string, password : string, name : string) {
+    async createNewAccount(email : string, password : string, name : string, picture : string) {
         const HashPass = hashPassword(password);
         try{
             const u = await this.prisma.account.create({
@@ -28,7 +28,7 @@ export class AccountService {
                     email,
                     password: HashPass,
                     name,
-                    profilePicture: ""
+                    profilePicture: picture || ""
                 }
             })
             return { id: u.idAccount, name: u.name, email: u.email, profilePicture: u.profilePicture };

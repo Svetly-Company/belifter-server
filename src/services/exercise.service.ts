@@ -13,6 +13,7 @@ interface iCreateWorkout {
     name: string;
     description: string;
     image: string;
+    image2: string;
     exercises: iExercises[]
 }
 
@@ -37,13 +38,14 @@ export class ExerciseService {
         for(let i = 0; i < workouts.length; i++) {
             const workout = workouts[i];
             const image = await this.uploadService.getImageUrl(workout.image);
+            const image3 = await this.uploadService.getImageUrl(workout.image2);
             const newExercises = [];
             for(let j = 0; j < workout.exercises.length; j++) {
                 const exercise = workout.exercises[j];
                 const image2 = await this.uploadService.getImageUrl(exercise.image);
                 newExercises.push({ ...exercise, image: image2 });
             }
-            updatedWorkouts.push({...workout, image: image, exercises: newExercises});
+            updatedWorkouts.push({...workout, image: image, image2: image3, exercises: newExercises});
         }
         return updatedWorkouts;
     }
@@ -63,6 +65,7 @@ export class ExerciseService {
                 name: create.name,
                 description: create.description,
                 image: create.image,
+                image2: create.image2,
                 exercises: {
                     createMany: {
                         data: create.exercises

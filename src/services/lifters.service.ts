@@ -11,7 +11,9 @@ export class LifterService {
     constructor(private readonly database: PrismaService, private readonly uploadService: UploadService) {}
 
     async getUsers() {
-        let users = await this.database.account.findMany();
+        let gymsD = await this.database.gym.findMany();
+        const gymsIDS = gymsD.map(g => g.accountId)
+        let users = await this.database.account.findMany({ where: { idAccount: { notIn: gymsIDS } } });
         let updatedGyms = [];
         for(let i = 0; i < users.length; i++) {
             const gym = users[i];

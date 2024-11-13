@@ -156,6 +156,7 @@ model Workout {
   name        String
   description String
   image       String
+  image2      String
   exercises   Exercise[]
 }
 

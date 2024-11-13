@@ -15,7 +15,7 @@ export class AccountController {
     async createAccountRoute(@Body() body: z.infer<typeof CreateAccountDTO>) {
         const {success, data, error} = CreateAccountDTO.safeParse(body);
         if(!success) throw new BadRequestException(error);
-        return await this.accountService.createNewAccount(data.email, data.password, data.name);
+        return await this.accountService.createNewAccount(data.email, data.password, data.name, data.profilePicture);
     }
 
     @Get(":id")
