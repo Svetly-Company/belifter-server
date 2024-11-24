@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/database/prisma.service";
 import { UploadService } from "./upload.service";
@@ -41,6 +42,7 @@ export class PostsService {
         const updatePosts = [];
         for(let i = 0; i < posts.length; i++) {
             const post = posts[i];
+            const authorPic = await this.upload.getImageUrl(post.account.profilePicture);
             const media = await this.upload.getImageUrl(post.mediaUrl);
             updatePosts.push({ 
                 idPost: post.idPost, 
@@ -50,14 +52,17 @@ export class PostsService {
                 author: {
                     id: post.account.idAccount,
                     name: post.account.name,
-                    profilePicture: post.account.profilePicture
+                    profilePicture: authorPic
                 },
-                comments: post.Comment.map(comment => ({
-                    content: comment.content, 
-                    authorName: comment.account.name,
-                    authorId: comment.account.idAccount,
-                    profilePicture: comment.account.profilePicture 
-                })) 
+                comments: post.Comment.map(async comment => {
+                    const pic = await this.upload.getImageUrl(comment.account.profilePicture)
+                    return ({
+                        content: comment.content, 
+                        authorName: comment.account.name,
+                        authorId: comment.account.idAccount,
+                        profilePicture: pic 
+                    })
+                }) 
             })
         }
         return updatePosts; 
