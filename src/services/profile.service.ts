@@ -33,8 +33,10 @@ export class ProfileService {
             const media = await this.uploadService.getImageUrl(p.mediaUrl)
             updatePosts.push({ id: p.idPost, content: p.content, mediaUrl: media })
         }
+        const userImage = await this.uploadService.getImageUrl(user.profilePicture || "");
         return {
             username: user.name,
+            profilePicture: userImage,
             description: "em briga de cego todo chute é voadora",
             stats: {
                 calories: 0,
