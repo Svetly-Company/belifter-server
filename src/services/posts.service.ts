@@ -44,6 +44,17 @@ export class PostsService {
             const post = posts[i];
             const authorPic = await this.upload.getImageUrl(post.account.profilePicture);
             const media = await this.upload.getImageUrl(post.mediaUrl);
+            const newComments = [];
+            for(let k = 0; k < post.Comment.length; k++) {
+                const comment = post.Comment[k];
+                const pic = await this.upload.getImageUrl(comment.account.profilePicture)
+                newComments.push({
+                    content: comment.content, 
+                    authorName: comment.account.name,
+                    authorId: comment.account.idAccount,
+                    profilePicture: pic 
+                });
+            }
             updatePosts.push({ 
                 idPost: post.idPost, 
                 content: post.content, 
@@ -54,15 +65,7 @@ export class PostsService {
                     name: post.account.name,
                     profilePicture: authorPic
                 },
-                comments: post.Comment.map(async comment => {
-                    const pic = await this.upload.getImageUrl(comment.account.profilePicture)
-                    return ({
-                        content: comment.content, 
-                        authorName: comment.account.name,
-                        authorId: comment.account.idAccount,
-                        profilePicture: pic 
-                    })
-                }) 
+                comments: newComments
             })
         }
         return updatePosts; 
